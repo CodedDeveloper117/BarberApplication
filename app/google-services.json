@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "540053673395",
+    "project_id": "barbarapplication",
+    "storage_bucket": "barbarapplication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540053673395:android:3b893ccff33cb83cb867c6",
+        "android_client_info": {
+          "package_name": "com.ammar.vendorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "540053673395-1r7te90u07pog1e7c4ubpumi4127g4c5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ammar.vendorapp",
+            "certificate_hash": "f5d22f1d23988e714d64a57ddf4612dd39f2ded2"
+          }
+        },
+        {
+          "client_id": "540053673395-92ketbu5ebmdf2qi0aal03dsebel5hq1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiuy-WH2XyWlC4wkMFNJsUpgxMi8s50Uo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540053673395-92ketbu5ebmdf2qi0aal03dsebel5hq1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
