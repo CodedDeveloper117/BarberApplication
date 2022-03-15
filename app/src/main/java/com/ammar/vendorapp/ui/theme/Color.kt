@@ -1,1 +1,0 @@
-package com.ammar.vendorapp.ui.themeimport androidx.compose.ui.graphics.Colorval DarkViolet = Color(0xFF9400d3)val AmethystPurple = Color(0xFF9966cc)val GoogleRed = Color(0xFFDE5346)
