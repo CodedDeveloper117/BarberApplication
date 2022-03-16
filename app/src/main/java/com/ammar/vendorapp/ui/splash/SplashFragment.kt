@@ -21,7 +21,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         _binding = FragmentSplashBinding.bind(view)
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             delay(3000L)
-            findNavController().navigate(R.id.action_splashFragment_to_onBoardingFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
         }
     }
 

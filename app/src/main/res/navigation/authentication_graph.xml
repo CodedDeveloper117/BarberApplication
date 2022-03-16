@@ -11,9 +11,16 @@
         <action
             android:id="@+id/action_splashFragment_to_onBoardingFragment"
             app:destination="@id/onBoardingFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/onBoardingFragment"
         android:name="com.ammar.vendorapp.ui.splash.OnBoardingFragment"
         android:label="OnBoardingFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.ammar.vendorapp.ui.login.LoginFragment"
+        android:label="LoginFragment" />
 </navigation>
