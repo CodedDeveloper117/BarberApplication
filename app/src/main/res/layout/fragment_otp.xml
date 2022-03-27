@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="One Time Passcode"
+        android:fontFamily="@font/sourcesanspro_bold"
+        android:textSize="25sp"
+        android:textColor="@color/amethyst_purple"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:id="@+id/otp_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/otp_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Please type in the one time passcode (OTP) sent to your email. If you didn't receive it, check your span folder or Click \'Resend Otp\'"
+        android:fontFamily="@font/sourcesanspro_semibold"
+        android:textSize="18sp"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/amethyst_purple"
+        android:layout_marginTop="10dp"
+        android:id="@+id/otp_subtitle"/>
+
+    <in.aabhasjindal.otptextview.OtpTextView
+        app:layout_constraintTop_toBottomOf="@id/otp_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/otp_view"
+        android:layout_marginTop="10dp"
+        app:bar_margin_left="2dp"
+        app:bar_margin_right="2dp"
+        app:otp_box_background="@drawable/bg_otp_inactive"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/amethyst_purple"
+        app:height="50dp"
+        app:width="50dp"
+        app:bar_height="2dp"
+        app:length="6"
+        app:bar_active_color="@color/amethyst_purple"
+        app:bar_inactive_color="@color/dark_violet"
+        app:otp_text_size="24dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/verify_otp_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_view"
+        android:background="@drawable/background_action_btn_outlined"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/signup_button_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/sourcesanspro_semibold"
+            android:text="Verify Otp"
+            android:textColor="@color/amethyst_purple"
+            android:textSize="23sp"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/amethyst_purple"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/verify_otp_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sourcesanspro_semibold"
+            android:text="Didn't Recieve OTP?"
+            android:textColor="@color/medium_gray"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sourcesanspro_bold"
+            android:text="Resend Otp"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/amethyst_purple"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

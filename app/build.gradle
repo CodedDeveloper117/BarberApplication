@@ -60,10 +60,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation platform('com.google.firebase:firebase-bom:29.0.4')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.1-native-mt'
 
     def paging_version = "3.1.1"
@@ -123,9 +119,11 @@ dependencies {
     implementation "io.ktor:ktor-client-json:$ktor_version"
     implementation "io.ktor:ktor-client-serialization-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
-
-    implementation 'com.google.firebase:firebase-auth'
+    
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
+
+    //Otp view
+    implementation 'com.github.aabhasr1:OtpView:v1.1.2-ktx'
 
 }
