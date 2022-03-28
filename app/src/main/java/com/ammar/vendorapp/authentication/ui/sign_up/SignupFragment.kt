@@ -2,11 +2,15 @@ package com.ammar.vendorapp.authentication.ui.sign_up
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
 import com.ammar.vendorapp.databinding.FragmentSignupBinding
@@ -36,6 +40,56 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest {
                     setErrors(it)
+                    if(it.loading) {
+                        binding.apply {
+                            loginBtn.background = ResourcesCompat.getDrawable(
+                                resources,
+                                R.drawable.background_action_btn_outlined,
+                                null
+                            )
+                            progressBar.isVisible = true
+                            signupButtonText.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collectLatest {
+                    when (it) {
+                        is SignupUiEvents.InvalidInputParameters -> {
+
+                        }
+                        is SignupUiEvents.Error -> {
+                            binding.apply {
+                                loginBtn.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.background_action_btn,
+                                    null
+                                )
+                                progressBar.isVisible = false
+                                signupButtonText.isVisible = true
+                            }
+                            Toast.makeText(requireContext(), it.error, Toast.LENGTH_LONG).show()
+                        }
+                        is SignupUiEvents.Success -> {
+                            Toast.makeText(requireContext(), it.key, Toast.LENGTH_LONG).show()
+                            binding.apply {
+                                loginBtn.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.background_action_btn,
+                                    null
+                                )
+                                progressBar.isVisible = false
+                                signupButtonText.isVisible = true
+                            }
+                            val action =
+                                SignupFragmentDirections.actionSignupFragmentToOtpFragment(it.key)
+                            findNavController().navigate(action)
+                        }
+                    }
                 }
             }
         }

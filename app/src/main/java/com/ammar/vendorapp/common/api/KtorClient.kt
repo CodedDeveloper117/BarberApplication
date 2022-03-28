@@ -16,7 +16,7 @@ object KtorClient {
     private val json = Json {
         encodeDefaults = false
         ignoreUnknownKeys = false
-        isLenient = false
+        isLenient = true
         prettyPrint = true
         coerceInputValues = true
     }

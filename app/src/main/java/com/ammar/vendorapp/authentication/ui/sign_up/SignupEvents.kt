@@ -33,12 +33,12 @@ sealed class SignupEvents {
 
     data class ChangeFirstname(val value: String) : SignupEvents() {
         val error: String
-            get() = if (value.isEmpty()) "Username cannot be empty" else ""
+            get() = if (value.isEmpty()) "First name cannot be empty" else ""
     }
 
     data class ChangeLastname(val value: String) : SignupEvents() {
         val error: String
-            get() = if (value.isEmpty()) "Username cannot be empty" else ""
+            get() = if (value.isEmpty()) "Last name cannot be empty" else ""
     }
 
     object Register : SignupEvents()

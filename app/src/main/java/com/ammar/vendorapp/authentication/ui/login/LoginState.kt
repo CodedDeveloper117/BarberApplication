@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class LoginState(
-    val data: User? = null,
+    val data: Any? = null,
     val loading: Boolean = false,
     val error: String = "",
     val email: TextFieldState = TextFieldState(),

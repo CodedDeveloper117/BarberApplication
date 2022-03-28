@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "SignupViewModel"
+
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val repository: AuthRepository
@@ -37,19 +39,23 @@ class SignupViewModel @Inject constructor(
                     repository.register(user).collectLatest { result ->
                         when(result) {
                             is Result.Success -> {
-                                result.data
+                                val data = result.data
+                                _state.changeState(loading = false, data = data)
+                                _events.emit(SignupUiEvents.Success(data.data.verificationKey))
                             }
                             is Result.Error -> {
-
+                                _state.changeState(loading = false, error = result.message)
+                                _events.emit(SignupUiEvents.Error(result.message))
                             }
                             is Result.Loading -> {
-
+                                _state.changeState(loading = true)
                             }
                         }
                     }
                     if(state.value.isValid()) {
-
+                        Log.d(TAG, "isValid: ")
                     } else {
+                        Log.d(TAG, "isValid: ${state.value}")
                         _events.emit(SignupUiEvents.InvalidInputParameters)
                     }
                 }
@@ -81,4 +87,6 @@ class SignupViewModel @Inject constructor(
 
 sealed class SignupUiEvents {
     object InvalidInputParameters: SignupUiEvents()
+    data class Success(val key: String): SignupUiEvents()
+    data class Error(val error: String): SignupUiEvents()
 }

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VendorApp">
         <activity
-            android:name="com.ammar.vendorapp.MainActivity"
+            android:name="com.ammar.vendorapp.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name" />
         <activity

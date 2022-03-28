@@ -2,12 +2,14 @@ package com.ammar.vendorapp.authentication.ui.sign_up
 
 import com.ammar.vendorapp.authentication.common.data.TextFieldState
 import com.ammar.vendorapp.authentication.common.data.changeState
+import com.ammar.vendorapp.authentication.data.models.UserResponse
+import com.ammar.vendorapp.authentication.data.models.UserSignupResponse
 import com.ammar.vendorapp.authentication.domain.entities.User
 import com.ammar.vendorapp.authentication.ui.login.LoginState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SignupState(
-    val data: User? = null,
+    val data: UserResponse<UserSignupResponse>? = null,
     val loading: Boolean = false,
     val error: String = "",
     val email: TextFieldState = TextFieldState(),
@@ -55,7 +57,7 @@ fun SignupState.isValid(): Boolean {
     return false
 }
 
-fun MutableStateFlow<SignupState>.changeState(data: User?, error: String?, loading: Boolean?) {
+fun MutableStateFlow<SignupState>.changeState(data: UserResponse<UserSignupResponse>? = null, error: String? = null, loading: Boolean? = false) {
     this.value = this.value.copy(
         data = data,
         error = if(!error.isNullOrEmpty()) error else "",
