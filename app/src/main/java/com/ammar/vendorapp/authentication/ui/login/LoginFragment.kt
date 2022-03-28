@@ -3,6 +3,7 @@ package com.ammar.vendorapp.authentication.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -36,6 +37,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         registerTextListeners()
         binding.loginBtn.setOnClickListener {
             viewModel.execute(LoginEvents.Login)
+        }
+
+        binding.forgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_emailFragment)
         }
 
         binding.signUpBtn.setOnClickListener {
@@ -99,6 +104,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             }.also {
                                 requireContext().startActivity(it)
                             }
+                        }
+                        is LoginUiEvents.UserNotValidated -> {
+                            Toast.makeText(requireContext(), "User not validated", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

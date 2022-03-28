@@ -42,7 +42,7 @@ class SignupViewModel @Inject constructor(
                                 is Result.Success -> {
                                     val data = result.data
                                     _state.changeState(loading = false, data = data)
-                                    _events.emit(SignupUiEvents.Success(data.data.verificationKey))
+                                    _events.emit(SignupUiEvents.Success(data?.data?.verificationKey!!))
                                 }
                                 is Result.Error -> {
                                     _state.changeState(loading = false, error = result.message)
@@ -53,7 +53,6 @@ class SignupViewModel @Inject constructor(
                                 }
                             }
                         }
-                        Log.d(TAG, "isValid: ")
                     } else {
                         Log.d(TAG, "isValid: ${state.value}")
                         _events.emit(SignupUiEvents.InvalidInputParameters)

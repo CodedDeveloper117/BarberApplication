@@ -41,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
         emit(Result.Loading())
         when(val data = api.verifyOtp(verificationKey, otp)) {
             is Either.Success -> {
-                emit(Result.Success(data.response.data))
+                emit(Result.Success(data.response?.data))
             }
             is Either.Failure -> {
                 emit(Result.Error(data.error.message ?: ""))

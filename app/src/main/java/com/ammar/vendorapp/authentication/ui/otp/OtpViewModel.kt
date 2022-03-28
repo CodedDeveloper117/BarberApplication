@@ -35,7 +35,7 @@ class OtpViewModel @Inject constructor(
                             when (result) {
                                 is Result.Success -> {
                                     _state.changeState(loading = false, error = "", data = result.data)
-                                    _events.emit(OtpUiEvents.Success(result.data))
+                                    _events.emit(OtpUiEvents.Success(result.data!!))
                                 }
                                 is Result.Loading -> {
                                     _state.changeState(loading = true, error = "")
@@ -57,7 +57,7 @@ class OtpViewModel @Inject constructor(
                                 _state.changeState(
                                     loading = false,
                                     error = "",
-                                    key = result.data.data.verificationKey
+                                    key = result.data?.data?.verificationKey
                                 )
                                 _events.emit(OtpUiEvents.OtpResendSuccessful)
                             }

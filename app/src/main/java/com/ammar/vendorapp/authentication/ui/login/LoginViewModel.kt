@@ -33,12 +33,20 @@ class LoginViewModel @Inject constructor(
                         repository.login(user).collectLatest { result ->
                             when (result) {
                                 is Result.Success -> {
-                                    _state.changeState(
-                                        data = result.data.data,
-                                        loading = false,
-                                        error = ""
-                                    )
-                                    _events.emit(LoginUiEvents.Success)
+                                    if(result.data == null) {
+                                        _state.changeState(
+                                            loading = false,
+                                            error = ""
+                                        )
+                                        _events.emit(LoginUiEvents.UserNotValidated)
+                                    } else {
+                                        _state.changeState(
+                                            data = result.data.data,
+                                            loading = false,
+                                            error = ""
+                                        )
+                                        _events.emit(LoginUiEvents.Success)
+                                    }
                                 }
                                 is Result.Error -> {
                                     _state.changeState(
@@ -74,4 +82,5 @@ sealed class LoginUiEvents {
     object InvalidInputParameters : LoginUiEvents()
     object Success : LoginUiEvents()
     data class Error(val error: String) : LoginUiEvents()
+    object UserNotValidated: LoginUiEvents()
 }

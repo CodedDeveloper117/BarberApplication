@@ -21,6 +21,9 @@ class UserAuthenticationApi(
                 method = HttpMethod.Post
                 body = user
             }
+            if(response.code == 203) {
+                Either.Success<UserResponse<TokenResponse>, Failure>(null)
+            }
             Either.Success(response)
         } catch (e: Exception) {
             Either.Failure(e.catchExceptions())
@@ -90,7 +93,7 @@ class UserAuthenticationApi(
                 method = HttpMethod.Post
                 body = UserEmailRequest(password)
                 headers {
-                    append(HttpHeaders.Authorization, "Bearer $token")
+                    append(HttpHeaders.Authorization, token)
                 }
             }
             Either.Success(response)
@@ -114,7 +117,7 @@ class UserAuthenticationApi(
 }
 
 sealed class Either<Response, Error> {
-    data class Success<Response, Error>(val response: Response) : Either<Response, Error>()
+    data class Success<Response, Error>(val response: Response?) : Either<Response, Error>()
     data class Failure<Response, Error>(val error: Error) : Either<Response, Error>()
 }
 
