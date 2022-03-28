@@ -5,6 +5,9 @@ import `in`.aabhasjindal.otptextview.OtpTextView
 import android.text.Editable
 import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 fun TextInputEditText.onChange(callback: (String) -> Unit) {
     this.addTextChangedListener(object: TextWatcher {
@@ -31,5 +34,22 @@ fun OtpTextView.onChange(callback: (String) -> Unit) {
         override fun onOTPComplete(otp: String) {
             callback(otp)
         }
+    }
+}
+
+fun String.isValid(): Boolean {
+    val pattern: Pattern
+    val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
+    pattern = Pattern.compile(passwordPattern)
+    val matcher: Matcher = pattern.matcher(this)
+    return matcher.matches() && this.length >= 8
+}
+
+fun TextInputLayout.setCustomErrors(error: String) {
+    if (error.isNotBlank()) {
+        this.isErrorEnabled = true
+        this.error = error
+    } else {
+        this.isErrorEnabled = false
     }
 }

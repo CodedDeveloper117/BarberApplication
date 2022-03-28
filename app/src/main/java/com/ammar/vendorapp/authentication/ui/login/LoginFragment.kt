@@ -40,7 +40,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         binding.forgotPassword.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_emailFragment)
+            val action = LoginFragmentDirections.actionLoginFragmentToEmailFragment(true)
+            findNavController().navigate(action)
         }
 
         binding.signUpBtn.setOnClickListener {
@@ -87,6 +88,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
+                            Snackbar.make(view, event.error, Snackbar.LENGTH_LONG).show()
                         }
                         is LoginUiEvents.Success -> {
                             binding.apply {

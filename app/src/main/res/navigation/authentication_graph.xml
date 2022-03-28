@@ -51,9 +51,32 @@
         <argument
             android:name="email"
             app:argType="string" />
+        <argument
+            android:name="forgotPassword"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_otpFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/emailFragment"
         android:name="com.ammar.vendorapp.authentication.ui.email.EmailFragment"
-        android:label="EmailFragment" />
+        android:label="EmailFragment" >
+        <action
+            android:id="@+id/action_emailFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+        <argument
+            android:name="forgotPassword"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.ammar.vendorapp.authentication.ui.change_password.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" >
+        <argument
+            android:name="token"
+            app:argType="string" />
+    </fragment>
 </navigation>

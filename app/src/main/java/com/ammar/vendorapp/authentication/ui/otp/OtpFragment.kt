@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
@@ -79,11 +80,16 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
-                            Intent(requireContext(), MainActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            }.also {
-                                requireContext().startActivity(it)
+                            if(args.forgotPassword) {
+                                val action = OtpFragmentDirections.actionOtpFragmentToChangePasswordFragment(event.token.token)
+                                findNavController().navigate(action)
+                            } else {
+                                Intent(requireContext(), MainActivity::class.java).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                }.also {
+                                    requireContext().startActivity(it)
+                                }
                             }
                         }
                         is OtpUiEvents.Error -> {

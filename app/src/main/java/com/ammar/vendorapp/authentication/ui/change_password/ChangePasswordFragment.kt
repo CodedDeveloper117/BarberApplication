@@ -1,8 +1,8 @@
-package com.ammar.vendorapp.authentication.ui.sign_up
+package com.ammar.vendorapp.authentication.ui.change_password
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,37 +11,42 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
-import com.ammar.vendorapp.databinding.FragmentSignupBinding
+import com.ammar.vendorapp.authentication.common.utils.setCustomErrors
+import com.ammar.vendorapp.authentication.ui.email.EmailFragmentDirections
+import com.ammar.vendorapp.authentication.ui.email.EmailUiEvents
+import com.ammar.vendorapp.databinding.FragmentChangePasswordBinding
+import com.ammar.vendorapp.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignupFragment : Fragment(R.layout.fragment_signup) {
+class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
 
-    private val viewModel: SignupViewModel by viewModels()
+    private var _binding: FragmentChangePasswordBinding? = null
 
-    private var _binding: FragmentSignupBinding? = null
-
+    private val viewModel: ChangePasswordViewModel by viewModels()
     private val binding get() = _binding!!
+    private val args: ChangePasswordFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentSignupBinding.bind(view)
-        registerTextListeners()
+        _binding = FragmentChangePasswordBinding.bind(view)
+        changeListeners()
 
         binding.loginBtn.setOnClickListener {
-            viewModel.execute(SignupEvents.Register)
+
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest {
-                    setErrors(it)
-                    if(it.loading) {
+                    binding.retypeLayout.setCustomErrors(it.retypePassword.error)
+                    binding.passwordLayout.setCustomErrors(it.password.error)
+                    if (it.loading) {
                         binding.apply {
                             loginBtn.background = ResourcesCompat.getDrawable(
                                 resources,
@@ -58,16 +63,16 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest {
-                    when (it) {
-                        is SignupUiEvents.InvalidInputParameters -> {
+                viewModel.events.collectLatest { event ->
+                    when (event) {
+                        is ChangePasswordUiEvents.InvalidInputParameters -> {
                             Snackbar.make(
                                 view,
                                 "Invalid Parameters, Please Input the right values",
                                 Snackbar.LENGTH_LONG
                             ).show()
                         }
-                        is SignupUiEvents.Error -> {
+                        is ChangePasswordUiEvents.Error -> {
                             binding.apply {
                                 loginBtn.background = ResourcesCompat.getDrawable(
                                     resources,
@@ -77,10 +82,9 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
-                            Toast.makeText(requireContext(), it.error, Toast.LENGTH_LONG).show()
+                            Snackbar.make(view, event.error, Snackbar.LENGTH_LONG).show()
                         }
-                        is SignupUiEvents.Success -> {
-                            Toast.makeText(requireContext(), it.key, Toast.LENGTH_LONG).show()
+                        is ChangePasswordUiEvents.Success -> {
                             binding.apply {
                                 loginBtn.background = ResourcesCompat.getDrawable(
                                     resources,
@@ -90,15 +94,32 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
-                            val action =
-                                SignupFragmentDirections.actionSignupFragmentToOtpFragment(it.key, viewModel.state.value.email.value, false)
-                            findNavController().navigate(action)
+                            Intent(requireContext(), MainActivity::class.java).apply {
+                                flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            }.also {
+                                requireContext().startActivity(it)
+                            }
                         }
                     }
                 }
             }
         }
+    }
 
+    private fun changeListeners() {
+        binding.passwordField.onChange {
+            viewModel.execute(ChangePasswordEvents.ChangePassword(it))
+        }
+
+        binding.retypePasswordField.onChange {
+            viewModel.execute(
+                ChangePasswordEvents.ChangeRetypePassword(
+                    it,
+                    viewModel.state.value.password.value
+                )
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -106,45 +127,4 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         _binding = null
     }
 
-    private fun registerTextListeners() {
-        binding.emailField.onChange {
-            viewModel.execute(SignupEvents.ChangeEmail(it))
-        }
-
-        binding.passwordField.onChange {
-            viewModel.execute(SignupEvents.ChangePassword(it))
-        }
-
-        binding.usernameField.onChange {
-            viewModel.execute(SignupEvents.ChangeUsername(it))
-        }
-
-        binding.lastnameField.onChange {
-            viewModel.execute(SignupEvents.ChangeLastname(it))
-        }
-
-        binding.firstnameField.onChange {
-            viewModel.execute(SignupEvents.ChangeFirstname(it))
-        }
-
-    }
-
-    private fun setErrors(state: SignupState) {
-        state.apply {
-            setError(firstname.error, binding.firstNameTextLayout)
-            setError(lastname.error, binding.lastNameTextLayout)
-            setError(email.error, binding.emailTextLayout)
-            binding.passwordTextLayout.helperText = password.error
-            setError(username.error, binding.userNameTextLayout)
-        }
-    }
-
-    private fun setError(error: String, layout: TextInputLayout) {
-        if(error.isNotBlank()) {
-            layout.isErrorEnabled = true
-            layout.error = error
-        } else {
-            layout.isErrorEnabled = false
-        }
-    }
 }
