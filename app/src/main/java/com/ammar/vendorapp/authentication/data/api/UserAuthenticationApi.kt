@@ -14,14 +14,13 @@ private const val TAG = "UserAuthenticationApi"
 class UserAuthenticationApi(
     private val client: HttpClient
 ) {
-    suspend fun login(user: UserLogin): Either<Any, Failure> {
+    suspend fun login(user: UserLogin): Either<UserResponse<TokenResponse>, Failure> {
         val url = "$BASE_URL/login"
         return try {
-            val response = client.request<Map<String, Any>>(url) {
+            val response = client.request<UserResponse<TokenResponse>>(url) {
                 method = HttpMethod.Post
                 body = user
             }
-            Log.d(TAG, "register: ${response["status"]}, ${response["data"]}, ${response["code"]}")
             Either.Success(response)
         } catch (e: Exception) {
             Either.Failure(e.catchExceptions())

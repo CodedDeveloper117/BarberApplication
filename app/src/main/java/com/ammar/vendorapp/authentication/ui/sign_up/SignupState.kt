@@ -4,8 +4,6 @@ import com.ammar.vendorapp.authentication.common.data.TextFieldState
 import com.ammar.vendorapp.authentication.common.data.changeState
 import com.ammar.vendorapp.authentication.data.models.UserResponse
 import com.ammar.vendorapp.authentication.data.models.UserSignupResponse
-import com.ammar.vendorapp.authentication.domain.entities.User
-import com.ammar.vendorapp.authentication.ui.login.LoginState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SignupState(
@@ -51,8 +49,8 @@ fun MutableStateFlow<SignupState>.changeFirstName(value: String?, error: String?
 
 fun SignupState.isValid(): Boolean {
     if(
-        email.error.isNotBlank() && password.error.isNotBlank() && firstname.error.isNotBlank()
-        && username.error.isNotBlank() && lastname.error.isNotBlank()
+        email.error.isBlank() && password.error.isBlank() && firstname.error.isBlank() && 
+        username.error.isBlank() && lastname.error.isBlank()
     ) return true
     return false
 }

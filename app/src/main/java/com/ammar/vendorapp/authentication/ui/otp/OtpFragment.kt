@@ -15,6 +15,7 @@ import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
 import com.ammar.vendorapp.databinding.FragmentOtpBinding
 import com.ammar.vendorapp.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -31,7 +32,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentOtpBinding.bind(view)
 
-        viewModel.execute(OtpEvents.ChangeKey(args.key))
+        viewModel.execute(OtpEvents.ChangeParameters(key = args.key, email = args.email))
 
         binding.otpView.onChange {
             val value = it.toInt()
@@ -40,6 +41,10 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
         binding.verifyOtpBtn.setOnClickListener {
             viewModel.execute(OtpEvents.VerifyOtp)
+        }
+
+        binding.resendOtp.setOnClickListener {
+            viewModel.execute(OtpEvents.ResendOtp)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -104,7 +109,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
                             }
                         }
                         is OtpUiEvents.InvalidInputParameters -> {
-
+                            Snackbar.make(view, "Invalid Input Parameters", Snackbar.LENGTH_LONG).show()
                         }
                     }
                 }

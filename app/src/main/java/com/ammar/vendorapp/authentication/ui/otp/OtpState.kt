@@ -8,7 +8,8 @@ data class OtpState(
     val loading: Boolean = false,
     val error: String = "",
     val otp: Int = 0,
-    val key: String = ""
+    val key: String = "",
+    val email: String = ""
 )
 
 fun MutableStateFlow<OtpState>.changeState(
@@ -16,13 +17,15 @@ fun MutableStateFlow<OtpState>.changeState(
     loading: Boolean? = null,
     error: String = "",
     otp: Int? = null,
-    key: String? = null
+    key: String? = null,
+    email: String? = null
 ) {
     value = value.copy(
         data = data ?: value.data,
         loading = loading ?: value.loading,
         error = error,
         otp = otp ?: value.otp,
-        key = key ?: value.key
+        key = key ?: value.key,
+        email = email ?: value.email
     )
 }

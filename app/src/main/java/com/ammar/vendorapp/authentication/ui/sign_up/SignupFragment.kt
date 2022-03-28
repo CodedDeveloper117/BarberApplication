@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
 import com.ammar.vendorapp.databinding.FragmentSignupBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -60,7 +61,11 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 viewModel.events.collectLatest {
                     when (it) {
                         is SignupUiEvents.InvalidInputParameters -> {
-
+                            Snackbar.make(
+                                view,
+                                "Invalid Parameters, Please Input the right values",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                         }
                         is SignupUiEvents.Error -> {
                             binding.apply {
@@ -86,7 +91,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                                 signupButtonText.isVisible = true
                             }
                             val action =
-                                SignupFragmentDirections.actionSignupFragmentToOtpFragment(it.key)
+                                SignupFragmentDirections.actionSignupFragmentToOtpFragment(it.key, viewModel.state.value.email.value)
                             findNavController().navigate(action)
                         }
                     }

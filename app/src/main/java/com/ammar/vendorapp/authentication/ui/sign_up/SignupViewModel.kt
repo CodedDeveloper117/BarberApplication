@@ -36,23 +36,23 @@ class SignupViewModel @Inject constructor(
                         firstName = state.value.firstname.value,
                         lastName = state.value.lastname.value,
                     )
-                    repository.register(user).collectLatest { result ->
-                        when(result) {
-                            is Result.Success -> {
-                                val data = result.data
-                                _state.changeState(loading = false, data = data)
-                                _events.emit(SignupUiEvents.Success(data.data.verificationKey))
-                            }
-                            is Result.Error -> {
-                                _state.changeState(loading = false, error = result.message)
-                                _events.emit(SignupUiEvents.Error(result.message))
-                            }
-                            is Result.Loading -> {
-                                _state.changeState(loading = true)
+                    if(state.value.isValid()) {
+                        repository.register(user).collectLatest { result ->
+                            when(result) {
+                                is Result.Success -> {
+                                    val data = result.data
+                                    _state.changeState(loading = false, data = data)
+                                    _events.emit(SignupUiEvents.Success(data.data.verificationKey))
+                                }
+                                is Result.Error -> {
+                                    _state.changeState(loading = false, error = result.message)
+                                    _events.emit(SignupUiEvents.Error(result.message))
+                                }
+                                is Result.Loading -> {
+                                    _state.changeState(loading = true)
+                                }
                             }
                         }
-                    }
-                    if(state.value.isValid()) {
                         Log.d(TAG, "isValid: ")
                     } else {
                         Log.d(TAG, "isValid: ${state.value}")

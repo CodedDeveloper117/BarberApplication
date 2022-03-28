@@ -45,5 +45,8 @@
         <argument
             android:name="key"
             app:argType="string" />
+        <argument
+            android:name="email"
+            app:argType="string" />
     </fragment>
 </navigation>

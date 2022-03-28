@@ -7,7 +7,7 @@ import com.ammar.vendorapp.authentication.data.models.*
 
 interface AuthRepository {
 
-    fun login(user: UserLogin): Flow<Result<Any>>
+    fun login(user: UserLogin): Flow<Result<UserResponse<TokenResponse>>>
 
     fun register(user: UserRegister): Flow<Result<UserResponse<UserSignupResponse>>>
 

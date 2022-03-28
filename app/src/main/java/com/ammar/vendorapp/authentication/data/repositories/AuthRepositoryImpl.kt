@@ -13,7 +13,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val api: UserAuthenticationApi
 ): AuthRepository {
 
-    override fun login(user: UserLogin): Flow<Result<Any>> = flow {
+    override fun login(user: UserLogin): Flow<Result<UserResponse<TokenResponse>>> = flow {
         emit(Result.Loading())
         when(val data = api.login(user)) {
             is Either.Success -> {

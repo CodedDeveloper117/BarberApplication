@@ -1,12 +1,11 @@
 package com.ammar.vendorapp.authentication.ui.login
 
 import com.ammar.vendorapp.authentication.common.data.TextFieldState
-import com.ammar.vendorapp.authentication.domain.entities.User
+import com.ammar.vendorapp.authentication.data.models.TokenResponse
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 data class LoginState(
-    val data: Any? = null,
+    val data: TokenResponse? = null,
     val loading: Boolean = false,
     val error: String = "",
     val email: TextFieldState = TextFieldState(),
@@ -40,10 +39,14 @@ fun MutableStateFlow<LoginState>.changePasswordState(value: String?, error: Stri
     }
 }
 
-fun MutableStateFlow<LoginState>.changeState(data: User?, error: String?, loading: Boolean?) {
+fun MutableStateFlow<LoginState>.changeState(
+    data: TokenResponse? = null,
+    error: String = "",
+    loading: Boolean? = null
+) {
     this.value = this.value.copy(
-        data = data,
-        error = if(!error.isNullOrEmpty()) error else "",
-        loading = loading ?: false
+        data = data ?: value.data,
+        error = error,
+        loading = loading ?: value.loading
     )
 }

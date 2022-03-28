@@ -30,24 +30,28 @@ class OtpViewModel @Inject constructor(
                     _state.changeState(otp = event.otp)
                 }
                 is OtpEvents.VerifyOtp -> {
-                    repository.verifyOtp(state.value.key, state.value.otp).collectLatest { result ->
-                        when (result) {
-                            is Result.Success -> {
-                                _state.changeState(loading = false, error = "", data = result.data)
-                                _events.emit(OtpUiEvents.Success(result.data))
-                            }
-                            is Result.Loading -> {
-                                _state.changeState(loading = true, error = "")
-                            }
-                            is Result.Error -> {
-                                _state.changeState(loading = false, error = result.message)
-                                _events.emit(OtpUiEvents.Error(result.message))
+                    if(state.value.otp != 0) {
+                        repository.verifyOtp(state.value.key, state.value.otp).collectLatest { result ->
+                            when (result) {
+                                is Result.Success -> {
+                                    _state.changeState(loading = false, error = "", data = result.data)
+                                    _events.emit(OtpUiEvents.Success(result.data))
+                                }
+                                is Result.Loading -> {
+                                    _state.changeState(loading = true, error = "")
+                                }
+                                is Result.Error -> {
+                                    _state.changeState(loading = false, error = result.message)
+                                    _events.emit(OtpUiEvents.Error(result.message))
+                                }
                             }
                         }
+                    } else {
+                        _events.emit(OtpUiEvents.InvalidInputParameters)
                     }
                 }
                 is OtpEvents.ResendOtp -> {
-                    repository.resendOtp(event.email).collectLatest { result ->
+                    repository.resendOtp(state.value.email).collectLatest { result ->
                         when (result) {
                             is Result.Success -> {
                                 _state.changeState(
@@ -67,8 +71,8 @@ class OtpViewModel @Inject constructor(
                         }
                     }
                 }
-                is OtpEvents.ChangeKey -> {
-                    _state.changeState(key = event.key)
+                is OtpEvents.ChangeParameters -> {
+                    _state.changeState(key = event.key, email = event.email)
                 }
             }
         }
