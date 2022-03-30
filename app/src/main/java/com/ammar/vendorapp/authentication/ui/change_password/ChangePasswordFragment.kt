@@ -94,12 +94,7 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
-                            Intent(requireContext(), MainActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            }.also {
-                                requireContext().startActivity(it)
-                            }
+                            findNavController().navigate(R.id.action_changePasswordFragment_to_splashLaunchFragment)
                         }
                     }
                 }

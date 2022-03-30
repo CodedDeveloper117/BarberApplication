@@ -106,12 +106,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 progressBar.isVisible = false
                                 signupButtonText.isVisible = true
                             }
-                            Intent(requireContext(), MainActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            }.also {
-                                requireContext().startActivity(it)
-                            }
+                            findNavController().navigate(R.id.action_loginFragment_to_splashLaunchFragment)
                         }
                         is LoginUiEvents.UserNotValidated -> {
                             Toast.makeText(requireContext(), "User not validated", Toast.LENGTH_SHORT).show()

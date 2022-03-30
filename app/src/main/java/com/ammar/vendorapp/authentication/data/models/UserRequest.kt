@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserOtpRequest(
-    val otp: Int,
+    val otp: String,
     val verificationKey: String
 )
 

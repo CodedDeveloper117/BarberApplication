@@ -3,6 +3,7 @@ package com.ammar.vendorapp.authentication.data.api
 import android.util.Log
 import com.ammar.vendorapp.authentication.common.utils.BASE_URL
 import com.ammar.vendorapp.authentication.data.models.*
+import com.ammar.vendorapp.common.data.User
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
@@ -43,7 +44,7 @@ class UserAuthenticationApi(
         }
     }
 
-    suspend fun verifyOtp(verificationKey: String, otp: Int): Either<UserResponse<TokenResponse>, Failure> {
+    suspend fun verifyOtp(verificationKey: String, otp: String): Either<UserResponse<TokenResponse>, Failure> {
         val url = "$BASE_URL/verify-otp"
         val otpRequest = UserOtpRequest(otp, verificationKey)
         return try {
@@ -110,6 +111,21 @@ class UserAuthenticationApi(
             }
             Either.Success(response)
         } catch (e: Exception) {
+            Either.Failure(e.catchExceptions())
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    suspend fun getUserInfo(token: String): Either<UserResponse<User>, Failure> {
+        val url = "$BASE_URL/user-info"
+        return try {
+            val response = client.request<UserResponse<User>>(url) {
+                headers {
+                    append(HttpHeaders.Authorization, token)
+                }
+            }
+            Either.Success(response)
+        }catch(e: Exception) {
             Either.Failure(e.catchExceptions())
         }
     }

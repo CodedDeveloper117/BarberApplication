@@ -36,8 +36,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         viewModel.execute(OtpEvents.ChangeParameters(key = args.key, email = args.email))
 
         binding.otpView.onChange {
-            val value = it.toInt()
-            viewModel.execute(OtpEvents.ChangeOtp(value))
+            viewModel.execute(OtpEvents.ChangeOtp(it))
         }
 
         binding.verifyOtpBtn.setOnClickListener {
@@ -84,12 +83,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
                                 val action = OtpFragmentDirections.actionOtpFragmentToChangePasswordFragment(event.token.token)
                                 findNavController().navigate(action)
                             } else {
-                                Intent(requireContext(), MainActivity::class.java).apply {
-                                    flags =
-                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                }.also {
-                                    requireContext().startActivity(it)
-                                }
+                                findNavController().navigate(R.id.action_otpFragment_to_splashLaunchFragment)
                             }
                         }
                         is OtpUiEvents.Error -> {

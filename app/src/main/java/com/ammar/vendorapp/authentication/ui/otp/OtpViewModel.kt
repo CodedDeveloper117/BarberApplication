@@ -30,7 +30,7 @@ class OtpViewModel @Inject constructor(
                     _state.changeState(otp = event.otp)
                 }
                 is OtpEvents.VerifyOtp -> {
-                    if(state.value.otp != 0) {
+                    if(state.value.otp != "") {
                         repository.verifyOtp(state.value.key, state.value.otp).collectLatest { result ->
                             when (result) {
                                 is Result.Success -> {

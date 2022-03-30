@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ammar.vendorapp.authentication.common.utils.Result
 import com.ammar.vendorapp.authentication.data.models.UserRegister
-import com.ammar.vendorapp.authentication.domain.entities.User
 import com.ammar.vendorapp.authentication.domain.repositories.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

@@ -5,6 +5,7 @@ import com.ammar.vendorapp.authentication.data.api.Either
 import com.ammar.vendorapp.authentication.data.api.UserAuthenticationApi
 import com.ammar.vendorapp.authentication.data.models.*
 import com.ammar.vendorapp.authentication.domain.repositories.AuthRepository
+import com.ammar.vendorapp.common.data.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -39,11 +40,12 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun verifyOtp(verificationKey: String, otp: Int): Flow<Result<TokenResponse>> = flow {
+    override fun verifyOtp(verificationKey: String, otp: String): Flow<Result<TokenResponse>> = flow {
         emit(Result.Loading())
         when(val data = api.verifyOtp(verificationKey, otp)) {
             is Either.Success -> {
-                emit(Result.Success(data.response?.data))
+                repository.saveToken(data.response.data.token)
+                emit(Result.Success(data.response.data))
             }
             is Either.Failure -> {
                 emit(Result.Error(data.error.data ?: ""))
@@ -93,6 +95,18 @@ class AuthRepositoryImpl @Inject constructor(
     override fun validateUser(email: String): Flow<Result<UserResponse<UserSignupResponse>>> = flow {
         emit(Result.Loading())
         when(val data = api.validateUser(email)) {
+            is Either.Success -> {
+                emit(Result.Success(data.response))
+            }
+            is Either.Failure -> {
+                emit(Result.Error(data.error.data ?: ""))
+            }
+        }
+    }
+
+    override fun getUserInfo(token: String): Flow<Result<UserResponse<User>>> = flow {
+        emit(Result.Loading())
+        when(val data = api.getUserInfo(token)) {
             is Either.Success -> {
                 emit(Result.Success(data.response))
             }

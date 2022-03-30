@@ -26,7 +26,7 @@ class DatastoreRepository @Inject constructor(
             }
         }
         .map {
-            val token = it[PreferencesKeys.TOKEN]
+            val token = it[PreferencesKeys.TOKEN] ?: ""
             token
         }
 

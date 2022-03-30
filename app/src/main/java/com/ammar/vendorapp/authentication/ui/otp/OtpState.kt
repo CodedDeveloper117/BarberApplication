@@ -7,7 +7,7 @@ data class OtpState(
     val data: TokenResponse? = null,
     val loading: Boolean = false,
     val error: String = "",
-    val otp: Int = 0,
+    val otp: String = "",
     val key: String = "",
     val email: String = ""
 )
@@ -16,7 +16,7 @@ fun MutableStateFlow<OtpState>.changeState(
     data: TokenResponse? = null,
     loading: Boolean? = null,
     error: String = "",
-    otp: Int? = null,
+    otp: String? = null,
     key: String? = null,
     email: String? = null
 ) {

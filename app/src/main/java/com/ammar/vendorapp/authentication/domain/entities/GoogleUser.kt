@@ -1,6 +1,6 @@
 package com.ammar.vendorapp.authentication.domain.entities
 
-data class User(
+data class GoogleUser(
     val id: String,
     val email: String,
     val username: String,

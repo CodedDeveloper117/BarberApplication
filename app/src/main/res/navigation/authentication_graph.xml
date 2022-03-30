@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_splashLaunchFragment"
+            app:destination="@id/splashLaunchFragment" />
     </fragment>
     <fragment
         android:id="@+id/onBoardingFragment"
@@ -29,6 +32,9 @@
         <action
             android:id="@+id/action_loginFragment_to_emailFragment"
             app:destination="@id/emailFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_splashLaunchFragment"
+            app:destination="@id/splashLaunchFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
@@ -58,6 +64,9 @@
         <action
             android:id="@+id/action_otpFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_otpFragment_to_splashLaunchFragment"
+            app:destination="@id/splashLaunchFragment" />
     </fragment>
     <fragment
         android:id="@+id/emailFragment"
@@ -78,5 +87,16 @@
         <argument
             android:name="token"
             app:argType="string" />
+        <action
+            android:id="@+id/action_changePasswordFragment_to_splashLaunchFragment"
+            app:destination="@id/splashLaunchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashLaunchFragment"
+        android:name="com.ammar.vendorapp.authentication.ui.splash.SplashLaunchFragment"
+        android:label="SplashLaunchFragment" >
+        <action
+            android:id="@+id/action_splashLaunchFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
