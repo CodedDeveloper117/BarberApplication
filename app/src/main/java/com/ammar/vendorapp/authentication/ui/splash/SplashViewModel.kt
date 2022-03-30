@@ -35,13 +35,11 @@ class SplashViewModel @Inject constructor(
     private fun getUserInfo() {
         viewModelScope.launch {
             val token = datastore.userPreferences.first()
-            Log.d(TAG, "getUserInfo: $token")
             if(token.isNotBlank()) {
                 repository.getUserInfo(token).collectLatest { result ->
                     when(result) {
                         is Result.Success -> {
                             _events.emit(SplashUiEvents.Success(result.data.data))
-                            Log.d(TAG, "getUserInfo: ${result.data}")
                         }
                         is Result.Error -> {
                             _events.emit(SplashUiEvents.Error(result.message))

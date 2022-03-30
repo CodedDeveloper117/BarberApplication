@@ -2,10 +2,9 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
-    app:startDestination="@id/launchFragment">
-
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/launchFragment"
-        android:name="com.ammar.vendorapp.main.ui.LaunchFragment"
-        android:label="LaunchFragment" />
+        android:id="@+id/homeFragment"
+        android:name="com.ammar.vendorapp.main.ui.home.HomeFragment"
+        android:label="HomeFragment" />
 </navigation>
