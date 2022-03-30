@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
+import com.ammar.vendorapp.authentication.common.utils.setCustomErrors
 import com.ammar.vendorapp.databinding.FragmentSignupBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -131,20 +132,11 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
 
     private fun setErrors(state: SignupState) {
         state.apply {
-            setError(firstname.error, binding.firstNameTextLayout)
-            setError(lastname.error, binding.lastNameTextLayout)
-            setError(email.error, binding.emailTextLayout)
-            binding.passwordTextLayout.helperText = password.error
-            setError(username.error, binding.userNameTextLayout)
-        }
-    }
-
-    private fun setError(error: String, layout: TextInputLayout) {
-        if(error.isNotBlank()) {
-            layout.isErrorEnabled = true
-            layout.error = error
-        } else {
-            layout.isErrorEnabled = false
+            binding.firstNameTextLayout.setCustomErrors(firstname.error)
+            binding.lastNameTextLayout.setCustomErrors(lastname.error)
+            binding.emailTextLayout.setCustomErrors(email.error)
+            binding.passwordTextLayout.helperText = if (password.error.isNotBlank() && password.error != "blank") password.error else ""
+            binding.userNameTextLayout.setCustomErrors(username.error)
         }
     }
 }

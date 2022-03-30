@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
+import com.ammar.vendorapp.authentication.common.utils.setCustomErrors
 import com.ammar.vendorapp.databinding.FragmentEmailBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -36,13 +37,17 @@ class EmailFragment : Fragment(R.layout.fragment_email) {
         changeListeners()
 
         binding.loginBtn.setOnClickListener {
-            viewModel.execute(EmailEvents.ValidateUser)
+            if(args.forgotPassword) {
+                viewModel.execute(EmailEvents.ForgotPassword)
+            } else {
+                viewModel.execute(EmailEvents.ValidateUser)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest {
-                    setError(it.error, binding.emailLayout)
+                    binding.emailLayout.setCustomErrors(it.email.error)
                     if (it.loading) {
                         binding.apply {
                             loginBtn.background = ResourcesCompat.getDrawable(
@@ -81,7 +86,25 @@ class EmailFragment : Fragment(R.layout.fragment_email) {
                             }
                             Snackbar.make(view, event.error, Snackbar.LENGTH_LONG).show()
                         }
-                        is EmailUiEvents.Success -> {
+                        is EmailUiEvents.ForgotPasswordSuccess -> {
+                            binding.apply {
+                                loginBtn.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.background_action_btn,
+                                    null
+                                )
+                                progressBar.isVisible = false
+                                signupButtonText.isVisible = true
+                            }
+                            val email = viewModel.state.value.email.value
+                            val action = EmailFragmentDirections.actionEmailFragmentToOtpFragment(
+                                event.key,
+                                email,
+                                true
+                            )
+                            findNavController().navigate(action)
+                        }
+                        is EmailUiEvents.ValidateUserSuccess -> {
                             binding.apply {
                                 loginBtn.background = ResourcesCompat.getDrawable(
                                     resources,
@@ -113,15 +136,6 @@ class EmailFragment : Fragment(R.layout.fragment_email) {
     private fun changeListeners() {
         binding.emailField.onChange {
             viewModel.execute(EmailEvents.ChangeEmail(it))
-        }
-    }
-
-    private fun setError(error: String, layout: TextInputLayout) {
-        if (error.isNotBlank()) {
-            layout.isErrorEnabled = true
-            layout.error = error
-        } else {
-            layout.isErrorEnabled = false
         }
     }
 

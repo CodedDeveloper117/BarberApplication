@@ -34,7 +34,7 @@ class ChangePasswordViewModel @Inject constructor(
                     _state.changeRetypePassword(event.value, event.error)
                 }
                 is ChangePasswordEvents.Continue -> {
-                    if(state.value.password.error.isBlank() && state.value.retypePassword.value.isBlank()) {
+                    if(state.value.password.error.isBlank() && state.value.retypePassword.error.isBlank()) {
                         repository.resetPassword(
                             state.value.password.value,
                             event.token
@@ -52,11 +52,13 @@ class ChangePasswordViewModel @Inject constructor(
                                     _state.changeState(loading = true, error = "")
                                 }
                                 is Result.Error -> {
-                                    _state.changeState(loading = false, error = "")
+                                    _state.changeState(loading = false, error = result.message)
                                     _events.emit(ChangePasswordUiEvents.Error(result.message))
                                 }
                             }
                         }
+                    } else {
+                        _events.emit(ChangePasswordUiEvents.InvalidInputParameters)
                     }
                 }
             }

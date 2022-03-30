@@ -10,17 +10,19 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val api: UserAuthenticationApi
+    private val api: UserAuthenticationApi,
+    private val repository: DatastoreRepository
 ): AuthRepository {
 
     override fun login(user: UserLogin): Flow<Result<UserResponse<TokenResponse>>> = flow {
         emit(Result.Loading())
         when(val data = api.login(user)) {
             is Either.Success -> {
+                repository.saveToken(data.response.data.token)
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message!!))
+                emit(Result.Error(data.error.data))
             }
         }
     }
@@ -32,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message!!))
+                emit(Result.Error(data.error.data))
             }
         }
     }
@@ -44,7 +46,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response?.data))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message ?: ""))
+                emit(Result.Error(data.error.data ?: ""))
             }
         }
     }
@@ -56,7 +58,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message ?: ""))
+                emit(Result.Error(data.error.data ?: ""))
             }
         }
     }
@@ -68,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message ?: ""))
+                emit(Result.Error(data.error.data ?: ""))
             }
         }
     }
@@ -83,7 +85,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message ?: ""))
+                emit(Result.Error(data.error.data ?: ""))
             }
         }
     }
@@ -95,7 +97,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Result.Success(data.response))
             }
             is Either.Failure -> {
-                emit(Result.Error(data.error.message ?: ""))
+                emit(Result.Error(data.error.data ?: ""))
             }
         }
     }

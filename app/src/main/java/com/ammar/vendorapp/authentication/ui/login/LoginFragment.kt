@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.ammar.vendorapp.R
 import com.ammar.vendorapp.authentication.common.utils.onChange
+import com.ammar.vendorapp.authentication.common.utils.setCustomErrors
 import com.ammar.vendorapp.databinding.FragmentLoginBinding
 import com.ammar.vendorapp.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
@@ -46,6 +47,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         binding.signUpBtn.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
+        }
+
+        binding.continueSignUp.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToEmailFragment(false)
+            findNavController().navigate(action)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -118,17 +124,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private fun setErrors(state: LoginState) {
         state.apply {
-            setError(email.error, binding.emailTextLayout)
-            binding.passwordTextLayout.helperText = state.password.error
-        }
-    }
-
-    private fun setError(error: String, layout: TextInputLayout) {
-        if (error.isNotBlank()) {
-            layout.isErrorEnabled = true
-            layout.error = error
-        } else {
-            layout.isErrorEnabled = false
+            binding.emailTextLayout.setCustomErrors(email.error)
+            binding.passwordTextLayout.helperText = if (password.error.isNotBlank() && password.error != "blank") password.error else ""
         }
     }
 

@@ -115,7 +115,7 @@ dependencies {
     implementation "com.github.skydoves:landscapist-coil:1.4.1"
 
     //Ktor
-    def ktor_version = '1.5.4'
+    def ktor_version = '1.6.8'
     implementation "io.ktor:ktor-client-okhttp:$ktor_version"
     implementation "io.ktor:ktor-client-json:$ktor_version"
     implementation "io.ktor:ktor-client-serialization-jvm:$ktor_version"

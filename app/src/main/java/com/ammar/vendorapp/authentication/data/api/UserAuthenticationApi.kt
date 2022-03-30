@@ -6,8 +6,10 @@ import com.ammar.vendorapp.authentication.data.models.*
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.json.Json
 
 private const val TAG = "UserAuthenticationApi"
 
@@ -20,9 +22,6 @@ class UserAuthenticationApi(
             val response = client.request<UserResponse<TokenResponse>>(url) {
                 method = HttpMethod.Post
                 body = user
-            }
-            if(response.code == 203) {
-                Either.Success<UserResponse<TokenResponse>, Failure>(null)
             }
             Either.Success(response)
         } catch (e: Exception) {
@@ -91,7 +90,7 @@ class UserAuthenticationApi(
         return try {
             val response = client.request<UserResponse<UserSignupResponse>>(url) {
                 method = HttpMethod.Post
-                body = UserEmailRequest(password)
+                body = UserPasswordRequest(password)
                 headers {
                     append(HttpHeaders.Authorization, token)
                 }
@@ -117,34 +116,43 @@ class UserAuthenticationApi(
 }
 
 sealed class Either<Response, Error> {
-    data class Success<Response, Error>(val response: Response?) : Either<Response, Error>()
+    data class Success<Response, Error>(val response: Response) : Either<Response, Error>()
     data class Failure<Response, Error>(val error: Error) : Either<Response, Error>()
 }
 
-fun Exception.catchExceptions() =
+private val json: Json = Json {
+    ignoreUnknownKeys = true
+}
+
+suspend fun Exception.catchExceptions() =
     when (this) {
-        is ServerResponseException -> Failure.HttpErrorInternalServerError(Exception("An Unknown Error Occurred, Please try again later"))
+        is ServerResponseException -> Failure.HttpErrorInternalServerError(defaultError)
         is ClientRequestException -> {
+            val content = this.response.readText(Charsets.UTF_8)
+            val exception = json.decodeFromString(UserError.serializer(), content)
+            Log.d(TAG, "exception: $exception, content: $content")
             when (this.response.status.value) {
-                400 -> Failure.HttpErrorBadRequest(this)
-                401 -> Failure.HttpErrorUnauthorized(this)
-                403 -> Failure.HttpErrorForbidden(this)
-                404 -> Failure.HttpErrorNotFound(this)
-                else -> Failure.HttpError(Exception("An Unknown Error Occurred"))
+                400 -> Failure.HttpErrorBadRequest(exception)
+                401 -> Failure.HttpErrorUnauthorized(exception)
+                403 -> Failure.HttpErrorForbidden(exception)
+                404 -> Failure.HttpErrorNotFound(exception)
+                else -> Failure.HttpError(defaultError)
             }
         }
-        is RedirectResponseException -> Failure.HttpError(this)
-        else -> Failure.HttpError(Exception("An Unknown Error Occurred"))
+        is RedirectResponseException -> Failure.HttpError(defaultError)
+        else -> Failure.HttpError(defaultError)
     }
 
 
 sealed class Failure(
-    e: Exception
-) : Exception(e.message) {
-    data class HttpErrorInternalServerError(val e: Exception) : Failure(e)
-    data class HttpErrorBadRequest(val e: Exception) : Failure(e)
-    data class HttpErrorUnauthorized(val e: Exception) : Failure(e)
-    data class HttpErrorForbidden(val e: Exception) : Failure(e)
-    data class HttpErrorNotFound(val e: Exception) : Failure(e)
-    data class HttpError(val e: Exception) : Failure(e)
+    val code: Int,
+    val data: String,
+    val status: String
+) : RuntimeException() {
+    data class HttpErrorInternalServerError(val e: UserError) : Failure(e.code, e.data, e.status)
+    data class HttpErrorBadRequest(val e: UserError) : Failure(e.code, e.data, e.status)
+    data class HttpErrorUnauthorized(val e: UserError) : Failure(e.code, e.data, e.status)
+    data class HttpErrorForbidden(val e: UserError) : Failure(e.code, e.data, e.status)
+    data class HttpErrorNotFound(val e: UserError) : Failure(e.code, e.data, e.status)
+    data class HttpError(val e: UserError) : Failure(e.code, e.data, e.status)
 }

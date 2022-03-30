@@ -11,4 +11,5 @@ sealed class EmailEvents {
     }
 
     object ValidateUser : EmailEvents()
+    object ForgotPassword : EmailEvents()
 }

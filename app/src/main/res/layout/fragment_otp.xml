@@ -10,10 +10,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Verify One Time Passcode(OTP)?"
+        android:text="Verify One Time Passcode(OTP)"
         android:fontFamily="@font/sourcesanspro_bold"
-        android:textSize="30sp"
-        android:textColor="@color/amethyst_purple"
+        android:textSize="35sp"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="20dp"
         android:id="@+id/otp_title"/>
@@ -28,7 +28,7 @@
         android:fontFamily="@font/sourcesanspro_semibold"
         android:textSize="18sp"
         android:layout_marginHorizontal="20dp"
-        android:textColor="@color/amethyst_purple"
+        android:textColor="@color/black"
         android:layout_marginTop="10dp"
         android:id="@+id/otp_subtitle"/>
 

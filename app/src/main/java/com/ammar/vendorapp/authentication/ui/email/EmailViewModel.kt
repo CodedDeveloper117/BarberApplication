@@ -35,7 +35,29 @@ class EmailViewModel @Inject constructor(
                                 is Result.Success -> {
                                     val data = result.data?.data!!
                                     _state.changeState(data = data, loading = false)
-                                    _events.emit(EmailUiEvents.Success(data.verificationKey))
+                                    _events.emit(EmailUiEvents.ValidateUserSuccess(data.verificationKey))
+                                }
+                                is Result.Error -> {
+                                    _state.changeState(loading = false, error = result.message)
+                                    _events.emit(EmailUiEvents.Error(result.message))
+                                }
+                                is Result.Loading -> {
+                                    _state.changeState(loading = true, error = "")
+                                }
+                            }
+                        }
+                    } else {
+                        _events.emit(EmailUiEvents.InvalidInputParameters)
+                    }
+                }
+                is EmailEvents.ForgotPassword -> {
+                    if(state.value.email.error.isBlank()) {
+                        repository.forgotPassword(state.value.email.value).collectLatest { result ->
+                            when(result) {
+                                is Result.Success -> {
+                                    val data = result.data?.data!!
+                                    _state.changeState(data = data, loading = false)
+                                    _events.emit(EmailUiEvents.ForgotPasswordSuccess(data.verificationKey))
                                 }
                                 is Result.Error -> {
                                     _state.changeState(loading = false, error = result.message)
@@ -57,7 +79,8 @@ class EmailViewModel @Inject constructor(
 }
 
 sealed class EmailUiEvents {
-    data class Success(val key: String): EmailUiEvents()
+    data class ValidateUserSuccess(val key: String): EmailUiEvents()
+    data class ForgotPasswordSuccess(val key: String): EmailUiEvents()
     data class Error(val error: String): EmailUiEvents()
     object InvalidInputParameters: EmailUiEvents()
 }

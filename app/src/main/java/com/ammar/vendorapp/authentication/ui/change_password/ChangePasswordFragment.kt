@@ -38,7 +38,7 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
         changeListeners()
 
         binding.loginBtn.setOnClickListener {
-
+            viewModel.execute(ChangePasswordEvents.Continue(args.token))
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

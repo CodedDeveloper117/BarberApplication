@@ -10,7 +10,7 @@ data class EmailState(
     val email: TextFieldState = TextFieldState(),
     val data: UserSignupResponse? = null,
     val loading: Boolean = false,
-    val error: String = ""
+    val error: String = "blank"
 )
 
 fun MutableStateFlow<EmailState>.changeEmailState(value: String?, error: String?) {

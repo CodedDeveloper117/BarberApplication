@@ -12,3 +12,8 @@ data class UserOtpRequest(
 data class UserEmailRequest(
     val email: String
 )
+
+@Serializable
+data class UserPasswordRequest(
+    val password: String
+)

@@ -46,7 +46,7 @@ fun String.isValid(): Boolean {
 }
 
 fun TextInputLayout.setCustomErrors(error: String) {
-    if (error.isNotBlank()) {
+    if (error.isNotBlank() && error != "blank") {
         this.isErrorEnabled = true
         this.error = error
     } else {
